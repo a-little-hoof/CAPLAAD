@@ -11,19 +11,19 @@ wnl = WordNetLemmatizer()
 sw=set(stopwords.words('english'))
 
 lc_stemmer = lc.LancasterStemmer()
-f=open('new_data.csv', 'r',encoding='utf-8')
+f=open('data_with_language.csv', 'r',encoding='utf-8')
 reader = csv.reader(f)
-test_file=open('stemming.csv', 'w',encoding='utf-8')
+test_file=open('for_mallet.csv', 'w',encoding='utf-8')
 writer= csv.writer(test_file)
 
 for i in reader:
-    list=[]
+    str=""
     test_list=i
     if i[3] == 'en':
         words=i[2]
         words = words.replace("\\n", ' ')
         pun=string.punctuation
-        pun+="1234567890–‘’”“【】·"
+        pun+="1234567890–‘’”“【】•®"
         for punc in pun:
             words = words.replace(punc,' ')
         words=words.split(" ")  # Split over space
@@ -32,10 +32,14 @@ for i in reader:
             if word not in sw and word!="":
                 if(word.find("http")!=-1):
                     continue
-                lc_stem = lc_stemmer.stem(word)
-                list.append(lc_stem)
+                str=str+word+" "
         print(i[0])
-        test_list.append(list)
+        test_list.append(str)
         writer.writerow(test_list)
+        id = test_list[0]
+        location = "E:\github\python\data_for_mallet_2\\" + id + ".txt"
+        fi = open(location, 'w', encoding='utf-8')
+        fi.write(str)
+        fi.close()
 f.close()
 test_file.close()
